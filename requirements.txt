@@ -1,6 +1,7 @@
 pytest==9.1.1
 selenium>=4.12.0,<4.17.0
 selenium-page-factory==2.8
+selene==2.0.0rc9
 allure-pytest==2.16.0
 python-dotenv==1.2.2
 jsonschema==4.26.0
