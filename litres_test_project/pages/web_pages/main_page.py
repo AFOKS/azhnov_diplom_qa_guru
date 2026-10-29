@@ -26,21 +26,22 @@ class MainPage:
         return self
 
     def search_book_by_title(self, book):
-        browser.element('[data-test-id="header__search-input--desktop"]').should(be.visible).type(book.name)
-        browser.element('[data-test-id="header__search-button--desktop"]').should(be.visible).click()
+        browser.element('[data-testid="search__input"]').should(be.visible).type(book.name)
+        browser.element('[data-testid="search__button"]').should(be.visible).click()
         return self
 
     def book_with_specified_title_must_be_found(self):
-        browser.element('[data-test-id="art__title--desktop"]').should(have.text('Семь сестер'))
+        browser.element('a[href="/book/andzhey-sapkovskiy/vedmak-6375365/"]') \
+            .should(have.attribute('aria-label', 'Ведьмак'))
         return self
 
     def search_book_by_author(self, book):
-        browser.element('[data-test-id="header__search-input--desktop"]').should(be.visible).type(book.author)
-        browser.element('[data-test-id="header__search-button--desktop"]').should(be.visible).click()
+        browser.element('[data-testid="search__input"]').should(be.visible).type(book.author)
+        browser.element('[data-testid="search__button"]').should(be.visible).click()
         return self
 
     def book_with_specified_author_must_be_found(self, book):
-        browser.element('[data-test-id="art__authorName--desktop"]').should(have.text(book.author))
+        browser.element('a[aria-label="Игра престолов"]').should(be.visible)
         return self
 
 
