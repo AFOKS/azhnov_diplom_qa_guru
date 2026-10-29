@@ -7,3 +7,4 @@ jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
 requests==2.34.2
 Pygments==2.21.0
+Appium-Python-Client==6.0.9
