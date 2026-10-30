@@ -1,6 +1,6 @@
 from selene import browser, be, by, have
 
-
+#
 class BookPage:
     def open(self, book):
         browser.open(f"book/{book.url}")

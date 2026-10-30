@@ -1,6 +1,6 @@
 from selene import browser, be, by, have, command
 
-
+#
 class MainPage:
     def open(self):
         browser.open("")

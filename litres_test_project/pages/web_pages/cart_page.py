@@ -1,6 +1,6 @@
 from selene import browser, be, have
 
-
+#
 class CartPage:
     def open(self):
         browser.open('my-books/cart/')

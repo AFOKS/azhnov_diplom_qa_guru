@@ -2,7 +2,7 @@ import allure
 from litres_test_project.data.books import Book
 from litres_test_project.pages.web_pages.main_page import main_page
 from litres_test_project.pages.web_pages.book_page import book_page
-
+#
 book = Book(
     name='Ведьмак',
     author='Анджей Сапковский',
