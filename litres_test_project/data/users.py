@@ -5,4 +5,4 @@ import dataclasses
 class User:
     name: str
     email: str
-    password: str
+    password: str = dataclasses.field(repr=False)

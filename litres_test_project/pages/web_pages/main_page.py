@@ -1,9 +1,15 @@
-from selene import browser, be, have
+from selene import browser, be, by, have, command
 
 
 class MainPage:
     def open(self):
         browser.open("")
+        return self
+
+    def accept_cookies(self):
+        button = browser.element(by.text('Принять'))
+        if button.matching(be.visible):
+            button.click()
         return self
 
     def filling_authorization_form(self, user):
@@ -110,6 +116,16 @@ class MainPage:
             '[data-testid="search__button"]'
         ).should(be.visible).click()
 
+        # ждём выдачу по признаку, который работает в тесте поиска
+        browser.element(f'a[aria-label="{book.name}"]').should(be.present)
+        return self
+
+    def open_book_from_search(self, book):
+        path = book.url.strip('/')
+        card = browser.element(f'a[href*="/book/{path}"]')
+        card.should(be.present)
+        card.perform(command.js.click)
+        browser.should(have.url_containing(f'/book/{path}'))
         return self
 
     def book_with_specified_title_must_be_found(self):
@@ -146,6 +162,5 @@ class MainPage:
         ).should(be.visible)
 
         return self
-
 
 main_page = MainPage()
