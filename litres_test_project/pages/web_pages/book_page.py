@@ -1,48 +1,59 @@
-
 from selene import browser, be, have
 
 
 class BookPage:
+
     def open(self, book):
         browser.open(f"book/{book.url}")
         return self
 
     # ---------- Избранное ----------
 
-    def adding_book_to_favorites(self):
-        buttons = browser.driver.find_elements(
-            'css selector',
-            '[data-analytics-id="wishlist-button"]'
+    def open_favorites_from_menu(self):
+        browser.open('my-books/liked/')
+
+        browser.should(
+            have.url_containing('/my-books/liked/')
         )
 
-        print('Количество найденных кнопок:', len(buttons))
+        return self
 
-        for index, button in enumerate(buttons):
-            print(
-                f'Кнопка {index}:',
-                'Видима:', button.is_displayed(),
-                'Текст:', button.text
-            )
+    def is_book_in_favorites(self, book):
+        self.open_favorites_from_menu()
+
+        return browser.element(
+            f'a[data-testid="art__title"][href="/book/{book.url}"]'
+        ).matching(be.visible)
+
+    def adding_book_to_favorites(self):
+        favorite_icon = browser.element(
+            '[data-testid="icon_favoritesFilled"]'
+        )
+
+        if not favorite_icon.matching(be.visible):
+            browser.element(
+                '[data-analytics-id="wishlist-button"]'
+            ).should(be.visible).click()
+
+            browser.element(
+                '[data-testid="icon_favoritesFilled"]'
+            ).should(be.visible)
 
         return self
 
     def removing_book_from_favorites(self):
-        browser.element(
-            '[data-testid="icon_favoritesThin"]'
-        ).should(be.visible).click()
+        favorite_icon = browser.element(
+            '[data-testid="icon_favoritesFilled"]'
+        )
 
-        browser.driver.refresh()
-        return self
+        if favorite_icon.matching(be.visible):
+            browser.element(
+                '[data-analytics-id="wishlist-button"]'
+            ).should(be.visible).click()
 
-    def open_favorites_from_menu(self):
-        browser.element(
-            '[data-testid="tab__link"][href="/my-books/purchased/"]'
-        ).should(be.visible).click()
-
-        print(browser.driver.current_url)
-
-        with open('/tmp/my_books_page.html', 'w', encoding='utf-8') as file:
-            file.write(browser.driver.page_source)
+            browser.element(
+                '[data-testid="icon_favorites"]'
+            ).should(be.visible)
 
         return self
 
@@ -50,8 +61,8 @@ class BookPage:
         self.open_favorites_from_menu()
 
         browser.element(
-            f'[data-testid="art__wrapper"] a[href="/book/{book.url}"][data-testid="art__title"]'
-        ).should(have.text(book.name))
+            f'a[data-testid="art__title"][href="/book/{book.url}"]'
+        ).should(be.visible).should(have.text(book.name))
 
         return self
 
@@ -59,8 +70,15 @@ class BookPage:
         self.open_favorites_from_menu()
 
         browser.element(
-            f'[data-testid="art__wrapper"] a[href="/book/{book.url}"][data-testid="art__title"]'
+            f'a[data-testid="art__title"][href="/book/{book.url}"]'
         ).should(be.absent)
+
+        return self
+
+    def cleanup_favorite(self, book):
+        self.open(book)
+
+        self.removing_book_from_favorites()
 
         return self
 
@@ -71,7 +89,6 @@ class BookPage:
             '[data-test-id="book__addToCartButton--desktop"]'
         ).should(be.visible).click()
 
-        browser.driver.refresh()
         return self
 
     def book_must_be_added_to_cart(self, book):
@@ -96,7 +113,6 @@ class BookPage:
             '[data-test-id="book__addToCartButton--desktop"]'
         ).should(be.visible).click()
 
-        browser.driver.refresh()
         return self
 
     def books_must_be_added_to_cart(self, book1, book2):
@@ -128,17 +144,5 @@ class BookPage:
 
         return self
 
-    def cleanup_favorite(self, book):
-        self.open(book)
-
-        favorite_button = browser.element(
-            '[data-testid="icon_favoritesThin"]'
-        )
-
-        if favorite_button.matching(be.visible):
-            favorite_button.click()
-            browser.driver.refresh()
-
-        return self
 
 book_page = BookPage()
