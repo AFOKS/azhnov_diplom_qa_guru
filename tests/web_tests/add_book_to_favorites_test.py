@@ -1,5 +1,6 @@
+import pytest
 import allure
-#
+
 from litres_test_project.data.books import Book
 from litres_test_project.pages.web_pages.main_page import main_page
 from litres_test_project.pages.web_pages.book_page import book_page
@@ -13,6 +14,15 @@ book = Book(
 )
 
 
+@pytest.fixture
+def clean_favorites(authorized_user):
+    with allure.step("Precondition: the book is not in favorites"):
+        book_page.open(book).ensure_not_in_favorites()
+    yield
+    with allure.step("Cleanup: the book is not in favorites"):
+        book_page.open(book).ensure_not_in_favorites()
+
+
 @allure.epic('Move book to/from favorites')
 @allure.label("owner", "flowerfrog")
 @allure.feature("Checking whether a book has been added or removed from favorites")
@@ -20,7 +30,7 @@ book = Book(
 @allure.tag('regress', 'web', 'normal')
 @allure.severity('normal')
 @allure.label('layer', 'web')
-def test_adding_book_to_favorites(authorized_user):
+def test_adding_book_to_favorites(authorized_user, clean_favorites):
     with allure.step("Search for the book by title"):
         main_page.open()
         main_page.search_book_by_title(book)
@@ -34,9 +44,6 @@ def test_adding_book_to_favorites(authorized_user):
     with allure.step("Check that the book is in favorites"):
         book_page.book_must_be_added_to_favorites(book)
 
-    with allure.step("Cleanup: remove the book from favorites"):
-        book_page.cleanup_favorite(book)
-
 
 @allure.epic('Move book to/from favorites')
 @allure.label("owner", "flowerfrog")
@@ -45,7 +52,7 @@ def test_adding_book_to_favorites(authorized_user):
 @allure.tag('regress', 'web', 'normal')
 @allure.severity('normal')
 @allure.label('layer', 'web')
-def test_removing_book_from_favorites(authorized_user):
+def test_removing_book_from_favorites(authorized_user, clean_favorites):
     with allure.step("Search for the book by title"):
         main_page.open()
         main_page.search_book_by_title(book)
@@ -54,7 +61,7 @@ def test_removing_book_from_favorites(authorized_user):
         main_page.open_book_from_search(book)
 
     with allure.step("Ensure the book is in favorites"):
-        book_page.adding_book_to_favorites()
+        book_page.ensure_in_favorites()
 
     with allure.step("Remove the book from favorites"):
         book_page.removing_book_from_favorites()
