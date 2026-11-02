@@ -5,7 +5,7 @@ from litres_test_project.pages.web_pages.book_page import book_page
 
 @allure.epic('Add book to cart')
 @allure.label("owner", "flowerfrog")
-@allure.feature("Checking whether a book has been added to cart")
+@allure.feature("Checking whether a books have been added")
 @allure.label('microservice', 'WEB')
 @allure.tag('regress', 'web', 'normal')
 @allure.severity('normal')

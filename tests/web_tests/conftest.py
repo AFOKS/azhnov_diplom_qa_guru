@@ -1,5 +1,5 @@
 import os
-#
+
 import pytest
 from dotenv import load_dotenv
 from selene import browser
@@ -10,7 +10,7 @@ from litres_test_project.data.users import User
 from litres_test_project.pages.web_pages.main_page import main_page
 from litres_test_project.utils import attach_web
 
-DEFAULT_BROWSER_VERSION = "152.0"
+DEFAULT_BROWSER_VERSION = "155.0"
 
 
 def pytest_addoption(parser):
