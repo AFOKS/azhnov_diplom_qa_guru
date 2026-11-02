@@ -6,9 +6,9 @@ from litres_test_project.pages.web_pages.main_page import main_page
 
 class BookPage:
     actions = '[class*="book__actionButtons"]:not([class*="_mobile"])'
-    favorite_button = f'{actions} button[data-analytics-id="wishlist-button"]'
-    favorite_icon = f'{actions} [data-testid="icon_favorites"]'
-    favorite_filled_icon = f'{actions} [data-testid="icon_favoritesFilled"]'
+    favorite_button = '[data-testid="wishlist__button"]'
+    favorite_icon = '[data-testid="icon_favorites"]'
+    favorite_filled_icon = '[data-testid="icon_favoritesFilled"]'
     favorite_any_icon = f'{actions} [data-testid^="icon_favorites"]'
 
     cart_button = 'button[data-testid="book__addToCartButton"]'
@@ -21,11 +21,9 @@ class BookPage:
     cart_author = '[data-testid="art__authorName--link"]'
     cart_price = '[data-testid="art__finalPrice"]'
 
-
-
     @staticmethod
-    def _visible(css):
-        return browser.all(css).element_by(be.visible)
+    def _visible(selector):
+        return browser.all(selector).element_by(be.visible)
 
     def open(self, book):
         browser.open(f'book/{book.url}')
@@ -38,22 +36,42 @@ class BookPage:
         return self
 
     def _set_favorite_state(self, filled: bool):
-        target = self.favorite_filled_icon if filled else self.favorite_icon
-
         self._visible(self.favorite_any_icon).should(be.visible)
 
-        if self._visible(target).matching(be.visible):
+        is_filled = self._visible(
+            self.favorite_filled_icon
+        ).matching(be.visible)
+
+        # Если книга уже находится в нужном состоянии,
+        # ничего не делаем
+        if is_filled == filled:
             return self
 
+        # Переключаем состояние избранного
         self._visible(self.favorite_button).perform(command.js.click)
-        self._visible(target).should(be.visible)
+
+        if filled:
+            self._visible(self.favorite_filled_icon).should(be.visible)
+        else:
+            browser.element(
+                self.favorite_filled_icon
+            ).should(be.absent)
+
         return self
 
     def adding_book_to_favorites(self):
-        return self._set_favorite_state(filled=True)
+        self._visible(self.favorite_button).click()
+
+        self._visible(self.favorite_filled_icon).should(be.visible)
+
+        return self
 
     def removing_book_from_favorites(self):
-        return self._set_favorite_state(filled=False)
+        self._visible(self.favorite_button).click()
+
+        self._visible(self.favorite_icon).should(be.visible)
+
+        return self
 
     def ensure_in_favorites(self):
         return self._set_favorite_state(filled=True)
