@@ -27,7 +27,7 @@ def test_searching_of_book_by_title():
         main_page.search_book_by_title(book)
 
     with allure.step("Check that the specified book is found"):
-        main_page.book_with_specified_title_must_be_found()
+        main_page.book_with_specified_title_must_be_found(book)
 
 
 @allure.epic('Search')
