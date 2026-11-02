@@ -98,13 +98,12 @@ class MainPage:
     def search_book_by_title(self, book):
         browser.element(
             '[data-testid="search__input"]'
-        ).should(be.visible).type(book.name)
+        ).should(be.visible).clear().type(book.name)
 
         browser.element(
             '[data-testid="search__button"]'
         ).should(be.visible).click()
 
-        browser.element(f'a[aria-label="{book.name}"]').should(be.present)
         return self
 
     def open_book_from_search(self, book):
@@ -115,10 +114,12 @@ class MainPage:
         browser.should(have.url_containing(f'/book/{path}'))
         return self
 
-    def book_with_specified_title_must_be_found(self):
+    def book_with_specified_title_must_be_found(self, book):
         browser.element(
-            'a[aria-label="Ведьмак"]'
-        ).should(be.visible)
+            'a[data-testid="art__title"]'
+        ).should(be.visible).should(
+            have.text(book.name)
+        )
 
         return self
 
