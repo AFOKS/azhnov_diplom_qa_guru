@@ -1,5 +1,5 @@
-import pytest
 import allure
+import pytest
 
 from litres_test_project.data.books import Book
 from litres_test_project.pages.web_pages.main_page import main_page
@@ -16,9 +16,15 @@ book = Book(
 
 @pytest.fixture
 def clean_favorites(authorized_user):
+    """
+    Подготавливает избранное перед тестом
+    и очищает его после выполнения теста.
+    """
     with allure.step("Precondition: the book is not in favorites"):
         book_page.open(book).ensure_not_in_favorites()
+
     yield
+
     with allure.step("Cleanup: the book is not in favorites"):
         book_page.open(book).ensure_not_in_favorites()
 
