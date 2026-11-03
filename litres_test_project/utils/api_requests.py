@@ -1,44 +1,41 @@
-import json
-import requests
-from allure_commons.types import AttachmentType
 import logging
+import os
+
 import allure
+import requests
+
+from litres_test_project.utils.attach_api import add_request, add_response
 
 
-def api_get(url, **kwargs):
-    with allure.step("API Request"):
-        result = requests.get(url="https://api.litres.ru/foundation/api" + url, **kwargs)
-        allure.attach(body=result.request.method + " " + result.request.url, name="Request",
-                      attachment_type=AttachmentType.TEXT, extension="txt")
-        allure.attach(body=json.dumps(result.json(), indent=4, ensure_ascii=True), name="Response",
-                      attachment_type=AttachmentType.JSON, extension="json")
-        logging.info(result.request.url)
-        logging.info(result.status_code)
-        logging.info(result.text)
-        return result
+DEFAULT_HEADERS = {
+    'app-id': '115',
+    'client-host': 'www.litres.ru',
+    'origin': 'https://www.litres.ru',
+    'referer': 'https://www.litres.ru/',
+    'user-agent': 'Mozilla/5.0',
+}
 
 
-def api_post(url, **kwargs):
-    with allure.step("API Request"):
-        result = requests.post(url="https://api.litres.ru/foundation/api" + url, **kwargs)
-        allure.attach(body=result.request.method + " " + result.request.url, name="Request",
-                      attachment_type=AttachmentType.TEXT, extension="txt")
-        allure.attach(body=json.dumps(result.json(), indent=4, ensure_ascii=True), name="Response",
-                      attachment_type=AttachmentType.JSON, extension="json")
-        logging.info(result.request.url)
-        logging.info(result.status_code)
-        logging.info(result.text)
-        return result
+def _request(method, endpoint, **kwargs):
+    base_url = os.getenv('API_BASE_URL', 'https://api.litres.ru/foundation/api')
+    headers = {**DEFAULT_HEADERS, **kwargs.pop('headers', {})}
+    with allure.step(f'{method} {endpoint}'):
+        response = requests.request(method, base_url + endpoint, headers=headers, **kwargs)
+        add_request(response, kwargs.get('json'))
+        add_response(response)
+        logging.info('%s %s', method, response.request.url)
+        logging.info(response.status_code)
+        logging.info(response.text)
+        return response
 
 
-def api_put(url, **kwargs):
-    with allure.step("API Request"):
-        result = requests.put(url="https://api.litres.ru/foundation/api" + url, **kwargs)
-        allure.attach(body=result.request.method + " " + result.request.url, name="Request",
-                      attachment_type=AttachmentType.TEXT, extension="txt")
-        allure.attach(body=json.dumps(result.json(), indent=4, ensure_ascii=True), name="Response",
-                      attachment_type=AttachmentType.JSON, extension="json")
-        logging.info(result.request.url)
-        logging.info(result.status_code)
-        logging.info(result.text)
-        return result
+def api_get(endpoint, **kwargs):
+    return _request('GET', endpoint, **kwargs)
+
+
+def api_post(endpoint, **kwargs):
+    return _request('POST', endpoint, **kwargs)
+
+
+def api_delete(endpoint, **kwargs):
+    return _request('DELETE', endpoint, **kwargs)
