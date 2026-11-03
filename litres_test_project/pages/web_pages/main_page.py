@@ -86,6 +86,16 @@ class MainPage:
 
         return self
 
+    def user_must_be_logged_in(self):
+        # форма входа закрылась и в шапке есть кнопка профиля
+        browser.element(
+            '[data-testid="auth__input--enterPassword"]'
+        ).should(be.absent)
+        browser.element(
+            '[data-testid="header__profile-button"]'
+        ).should(be.visible)
+        return self
+
     def user_must_see_invalid_credentials_error(self):
         browser.element(
             '[data-testid="textbox--input__error"]'
