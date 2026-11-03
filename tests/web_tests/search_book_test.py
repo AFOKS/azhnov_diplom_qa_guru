@@ -1,4 +1,3 @@
-
 import allure
 
 from litres_test_project.data.books import Book
