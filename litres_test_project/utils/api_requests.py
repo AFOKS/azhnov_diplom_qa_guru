@@ -25,7 +25,6 @@ def _request(method, endpoint, **kwargs):
         add_response(response)
         logging.info('%s %s', method, response.request.url)
         logging.info(response.status_code)
-        logging.info(response.text)
         return response
 
 
@@ -35,6 +34,10 @@ def api_get(endpoint, **kwargs):
 
 def api_post(endpoint, **kwargs):
     return _request('POST', endpoint, **kwargs)
+
+
+def api_put(endpoint, **kwargs):
+    return _request('PUT', endpoint, **kwargs)
 
 
 def api_delete(endpoint, **kwargs):
