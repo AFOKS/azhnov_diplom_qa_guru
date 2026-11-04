@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "status": {"type": "integer"},
+    "error": {"type": "null"},
+    "payload": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {"type": "string"},
+              "instance": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "integer"},
+                  "uuid": {"type": "string"},
+                  "url": {"type": "string"},
+                  "title": {"type": "string"},
+                  "art_type": {"type": "integer"},
+                  "language_code": {"type": "string"},
+                  "prices": {
+                    "type": "object",
+                    "properties": {
+                      "final_price": {"type": "number"},
+                      "full_price": {"type": "number"},
+                      "currency": {"type": "string"}
+                    },
+                    "required": ["final_price", "full_price", "currency"]
+                  },
+                  "persons": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {"type": "integer"},
+                        "full_name": {"type": "string"},
+                        "role": {"type": "string"}
+                      },
+                      "required": ["id", "full_name", "role"]
+                    }
+                  }
+                },
+                "required": ["id", "uuid", "url", "title", "art_type", "prices", "persons"]
+              }
+            },
+            "required": ["type", "instance"]
+          }
+        },
+        "extra": {
+          "type": "object",
+          "properties": {
+            "counters": {
+              "type": "object",
+              "properties": {
+                "all": {"type": "integer"},
+                "text_book": {"type": "integer"}
+              },
+              "required": ["all", "text_book"]
+            },
+            "pagination": {"type": "object"}
+          },
+          "required": ["counters", "pagination"]
+        },
+        "facets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "type": {"type": "string"},
+              "title": {"type": "string"},
+              "data": {"type": "array"}
+            },
+            "required": ["name", "type", "title", "data"]
+          }
+        },
+        "fast_facets": {"type": "array"}
+      },
+      "required": ["data", "extra", "facets", "fast_facets"]
+    }
+  },
+  "required": ["status", "error", "payload"]
+}
