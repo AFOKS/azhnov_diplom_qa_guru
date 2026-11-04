@@ -11,7 +11,7 @@ from litres_test_project.data.users import User
 from litres_test_project.pages.web_pages.main_page import main_page
 from litres_test_project.utils import attach_web
 
-DEFAULT_BROWSER_VERSION = "155.0"
+DEFAULT_BROWSER_VERSION = "156.0"
 
 
 def pytest_addoption(parser):
@@ -52,7 +52,7 @@ def setup_browser(request):
 
     browser.config.base_url = "https://www.litres.ru/"
     browser.config.driver = driver
-    browser.config.timeout = 10.0  # логин и поиск на сайте могут занимать больше 4 секунд
+    browser.config.timeout = 10.0
     browser.config.window_width = 1920
     browser.config.window_height = 1080
 
