@@ -3,10 +3,11 @@ import json
 import allure
 from allure_commons.types import AttachmentType
 
+SECRET_KEYS = {'password', 'sid'}
 
 def mask_secrets(body):
     if isinstance(body, dict):
-        return {key: '***' if key == 'password' else value for key, value in body.items()}
+        return {key: '***' if key in SECRET_KEYS else mask_secrets(value) for key, value in body.items()}
     return body
 
 
