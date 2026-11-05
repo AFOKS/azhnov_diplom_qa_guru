@@ -5,14 +5,14 @@ from selene import browser, be, have
 class AndroidSearchBookPage:
 
     def searching_book(self):
-        self._search('Witcher')
+        self._search('The Witcher')
         return self
 
     def book_must_be_found(self):
         results = browser.all((AppiumBy.ID, 'ru.litres.android:id/clArtLayout'))
         results.should(have.size_greater_than(0))
         (browser.all((AppiumBy.ID, "ru.litres.android:id/textViewBookName")).first
-         .should(have.text('Witcher')))
+         .should(have.text('The Witcher')))
         return self
 
     def searching_non_existent_book(self):
