@@ -1,22 +1,26 @@
 from appium.webdriver.common.appiumby import AppiumBy
-from selene import browser, be, have
+from selene import be, browser, have, query
+
+SEARCH_BOOK_TITLE = 'The Witcher'
+NON_EXISTENT_BOOK_TITLE = 'sdflksd'
 
 
 class AndroidSearchBookPage:
 
     def searching_book(self):
-        self._search('The Witcher')
+        self._search(SEARCH_BOOK_TITLE)
         return self
 
     def book_must_be_found(self):
-        results = browser.all((AppiumBy.ID, 'ru.litres.android:id/clArtLayout'))
-        results.should(have.size_greater_than(0))
-        (browser.all((AppiumBy.ID, "ru.litres.android:id/textViewBookName")).first
-         .should(have.text('The Witcher')))
+        browser.all((AppiumBy.ID, 'ru.litres.android:id/clArtLayout')).should(have.size_greater_than(0))
+        self._first_book_name().should(have.text(SEARCH_BOOK_TITLE))
         return self
 
+    def first_book_title(self):
+        return self._first_book_name().should(be.visible).get(query.text)
+
     def searching_non_existent_book(self):
-        self._search('sdflksd')
+        self._search(NON_EXISTENT_BOOK_TITLE)
         return self
 
     def book_must_not_be_found(self):
@@ -31,11 +35,14 @@ class AndroidSearchBookPage:
         return self
 
     @staticmethod
-    def _search(query):
+    def _first_book_name():
+        return browser.all((AppiumBy.ID, "ru.litres.android:id/textViewBookName")).first
+
+    @staticmethod
+    def _search(text):
         browser.element((AppiumBy.ID, "ru.litres.android:id/search")).click()
-        browser.element((AppiumBy.ID, "ru.litres.android:id/et_search_query")).type(query)
-        suggestion = browser.element((AppiumBy.ID, "ru.litres.android:id/textViewItemSearchSuggestText"))
-        suggestion.should(have.text(query)).click()
+        browser.element((AppiumBy.ID, "ru.litres.android:id/et_search_query")).type(text)
+        browser.element((AppiumBy.ID, "ru.litres.android:id/textViewItemSearchSuggestText")).should(be.visible).click()
 
 
 book_search_page = AndroidSearchBookPage()
