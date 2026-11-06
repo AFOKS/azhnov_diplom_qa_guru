@@ -9,3 +9,5 @@ jsonschema-specifications==2025.9.1
 requests==2.34.2
 Pygments==2.21.0
 Appium-Python-Client==6.0.9
+pydantic==2.14.3
+pydantic-settings==2.16.2
