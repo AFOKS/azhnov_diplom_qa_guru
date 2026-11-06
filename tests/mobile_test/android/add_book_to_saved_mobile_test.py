@@ -1,5 +1,4 @@
 import allure
-import pytest
 
 from litres_test_project.pages.mobile_pages.main_page import main_page
 from litres_test_project.pages.mobile_pages.books_to_read_page import book_search_page
@@ -11,7 +10,6 @@ from litres_test_project.pages.mobile_pages.book_page import book_page
 @allure.feature("Checking whether a book has been added to saved in mobile app")
 @allure.severity('normal')
 @allure.label('layer', 'mobile')
-#@pytest.mark.xfail(reason="App Automate testing time has expired")
 def test_adding_book_to_saved(android_mobile_management):
 
     with allure.step('Selecting the application language'):
@@ -24,6 +22,7 @@ def test_adding_book_to_saved(android_mobile_management):
         book_search_page.searching_book()
 
     with allure.step('Choosing a book'):
+        book_title = book_search_page.first_book_title()
         book_search_page.choosing_book()
 
     with allure.step('Adding a book to Saved'):
@@ -36,4 +35,4 @@ def test_adding_book_to_saved(android_mobile_management):
         book_page.open_saved_for_later()
 
     with allure.step('Checking that the selected book has been added to Saved'):
-        book_page.book_must_be_added_to_saved("The Witcher. Любовь и влечение")
+        book_page.book_must_be_added_to_saved(book_title)
