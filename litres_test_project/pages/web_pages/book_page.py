@@ -14,27 +14,22 @@ from litres_test_project.pages.web_pages.main_page import main_page
 
 
 class BookPage:
-    # Избранное
+
     actions = '[class*="book__actionButtons"]'
     favorite_button = f'{actions} button[data-analytics-id="wishlist-button"]'
     favorite_icon = '[data-testid="icon_favorites"]'
     favorite_filled_icon = '[data-testid="icon_favoritesFilled"]'
 
-    # Корзина: страница книги
     cart_button = 'button[data-testid="book__addToCartButton"]'
     go_to_cart_button = 'button[data-testid="book__goToCartButton"]'
 
-    # Поп-ап «Книга в подарок»
     popup = '[data-testid="modal--wrapper"]'
     popup_close_icon = f'{popup} [data-testid="icon_close"]'
 
-    # Корзина: карточки
     cart_items = '[data-testid^="cart__listItem--"]'
     cart_title = '[data-testid="cart__bookCardTitle--wrapper"]'
     cart_author = '[data-testid="art__authorName--link"]'
     cart_price = '[data-testid="art__finalPrice"]'
-
-    # ---------- Открытие страниц ----------
 
     def open(self, book):
         browser.open(f'book/{book.url}')
@@ -46,10 +41,7 @@ class BookPage:
         browser.should(have.url_containing('/my-books/liked/'))
         return self
 
-    # ---------- Избранное ----------
-
     def _get_favorite_button(self):
-        """Единственная видимая кнопка избранного с иконкой состояния."""
         buttons = browser.driver.find_elements(
             By.CSS_SELECTOR, self.favorite_button
         )
@@ -79,7 +71,6 @@ class BookPage:
 
     def _is_book_in_favorites(self):
         button = self._get_favorite_button()
-
         filled = button.find_elements(
             By.CSS_SELECTOR, self.favorite_filled_icon
         )
@@ -96,7 +87,6 @@ class BookPage:
         )
 
     def _safe_favorite_state(self):
-        """True/False, а None, если состояние пока не определить."""
         try:
             return self._is_book_in_favorites()
         except (
@@ -107,7 +97,7 @@ class BookPage:
             return None
 
     def _set_favorite_state(self, filled: bool):
-        """Приводит избранное к нужному состоянию, повторяя клик при сбое."""
+
         deadline = time.time() + 30
 
         while True:
@@ -133,7 +123,7 @@ class BookPage:
                     lambda d: self._safe_favorite_state() == filled
                 )
             except SeleniumTimeoutException:
-                pass  # клик не сработал, пробуем ещё раз
+                pass
 
     def adding_book_to_favorites(self):
         return self._set_favorite_state(filled=True)
@@ -162,8 +152,6 @@ class BookPage:
         return self
 
     def book_must_be_removed_from_favorites(self, book):
-        # проверяем по иконке на странице книги: состояние приходит с сервера,
-        # а be.absent на списке мог бы пройти до отрисовки страницы
         self.open(book)
         WebDriverWait(browser.driver, 10).until(
             lambda d: self._safe_favorite_state() is False,
@@ -171,10 +159,7 @@ class BookPage:
         )
         return self
 
-    # ---------- Поп-ап ----------
-
     def _close_gift_popup_if_shown(self):
-        """Закрывает поп-ап «Книга в подарок», если он появился."""
         try:
             close_button = browser.element(self.popup_close_icon).with_(
                 timeout=6
@@ -189,7 +174,6 @@ class BookPage:
     # ---------- Корзина ----------
 
     def adding_book_to_cart(self):
-        """Добавляет книгу и ждёт смены кнопки на «В корзине / Перейти»."""
         add_button = browser.element(self.cart_button).should(be.visible)
         go_to_cart = browser.element(self.go_to_cart_button)
 

@@ -40,7 +40,6 @@ class CartPage:
         card = self._card(book).should(be.visible)
         delete_button = card.element(self.delete_button).should(be.visible)
         delete_button.perform(command.js.click)
-        # убеждаемся, что модалка открылась, до клика по её кнопкам
         browser.element(self.confirm_delete_button).should(be.visible)
         return self
 
@@ -62,7 +61,6 @@ class CartPage:
 
     def ensure_book_not_in_cart(self, book):
         self.open()
-        # ждём, пока загрузится либо список книг, либо экран пустой корзины
         browser.element(f'{self.cart_items}, {self.empty_state}').should(be.visible)
         if self._card(book).matching(be.visible):
             self.removing_book_from_cart(book)

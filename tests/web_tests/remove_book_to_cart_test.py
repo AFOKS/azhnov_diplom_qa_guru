@@ -4,7 +4,6 @@ from litres_test_project.data.books import Book
 from litres_test_project.pages.web_pages.book_page import book_page
 from litres_test_project.pages.web_pages.cart_page import cart_page
 
-
 @allure.epic('Remove book from cart')
 @allure.label("owner", "flowerfrog")
 @allure.feature("Checking whether a book has been removed from cart")

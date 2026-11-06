@@ -15,7 +15,6 @@ book = Book(
 
 @pytest.fixture
 def clean_favorites(authorized_user):
-    """После теста возвращает аккаунт в исходное состояние."""
     yield
     with allure.step("Cleanup: the book is not in favorites"):
         book_page.open(book).ensure_not_in_favorites()

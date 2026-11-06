@@ -2,7 +2,6 @@ import allure
 from litres_test_project.data.books import Book
 from litres_test_project.pages.web_pages.book_page import book_page
 
-
 @allure.epic('Add book to cart')
 @allure.label("owner", "flowerfrog")
 @allure.feature("Checking whether a books have been added")

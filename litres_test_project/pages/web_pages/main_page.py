@@ -12,7 +12,7 @@ class MainPage:
             button.with_(timeout=3).should(be.visible)
             button.click()
         except TimeoutException:
-            pass  # баннера нет, это нормально
+            pass
         return self
 
     def filling_authorization_form(self, user):
@@ -87,7 +87,6 @@ class MainPage:
         return self
 
     def user_must_be_logged_in(self):
-        # форма входа закрылась и в шапке есть кнопка профиля
         browser.element(
             '[data-testid="auth__input--enterPassword"]'
         ).should(be.absent)
