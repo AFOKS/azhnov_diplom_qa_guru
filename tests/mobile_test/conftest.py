@@ -31,9 +31,9 @@ def _bstack_options(config):
 def _local_options(config):
     return UiAutomator2Options().load_capabilities({
         'platformName': 'android',
-        'platformVersion': config.local_platform_version,
-        'deviceName': config.local_device_name,
-        'app': config.local_app_path,
+        'platformVersion': config.platform_version,
+        'deviceName': config.device_name,
+        'app': config.app_path,
         'appium:language': 'en',
         'appium:locale': 'US',
     })
@@ -44,10 +44,9 @@ def android_mobile_management():
     config = load_config()
     is_local = CONTEXT == 'local'
     options = _local_options(config) if is_local else _bstack_options(config)
-    remote_url = config.local_remote_url if is_local else config.remote_browser_url
 
     with allure.step('setup app session'):
-        browser.config.driver = webdriver.Remote(remote_url, options=options)
+        browser.config.driver = webdriver.Remote(config.remote_browser_url, options=options)
 
     browser.config.timeout = 10.0
     browser.config._wait_decorator = support._logging.wait_with(
