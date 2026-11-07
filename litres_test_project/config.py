@@ -18,12 +18,12 @@ class BstackConfig(BaseSettings):
 
 
 class LocalConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', extra='ignore')
+    model_config = SettingsConfigDict(env_file='.env.local', extra='ignore')
 
-    local_remote_url: str = 'http://127.0.0.1:4723'
-    local_app_path: str
-    local_device_name: str = 'emulator-5554'
-    local_platform_version: str = '12.0'
+    remote_browser_url: str = 'http://127.0.0.1:4723'
+    app_path: str
+    device_name: str = 'emulator-5554'
+    platform_version: str = '12.0'
 
 
 def load_config():
