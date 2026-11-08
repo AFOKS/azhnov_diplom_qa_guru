@@ -4,35 +4,48 @@ import pytest
 from dotenv import load_dotenv
 from selene import browser
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.remote.client_config import ClientConfig
 
 from litres_test_project.data.users import User
 from litres_test_project.pages.web_pages.main_page import main_page
 from litres_test_project.utils import attach_web
 
-DEFAULT_BROWSER_VERSION = "156.0"
+DEFAULT_VERSIONS = {'chrome': '156.0', 'firefox': '158.0'}
 
 
-def pytest_addoption(parser):
-    parser.addoption('--browser_version', default=DEFAULT_BROWSER_VERSION)
+def get_options(browser_name, headless):
+    if browser_name == 'firefox':
+        options = FirefoxOptions()
+        if headless:
+            options.add_argument('-headless')
+    else:
+        options = ChromeOptions()
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.set_capability('goog:loggingPrefs', {'browser': 'ALL'})
+        if headless:
+            options.add_argument('--headless=new')
+    return options
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope='session', autouse=True)
 def load_env():
     load_dotenv()
 
 
 @pytest.fixture(scope='function', autouse=True)
 def setup_browser(request):
-    browser_version = request.config.getoption('--browser_version') or DEFAULT_BROWSER_VERSION
+    browser_name = request.config.getoption('--browser')
+    browser_version = (
+        request.config.getoption('--browser_version') or DEFAULT_VERSIONS[browser_name]
+    )
+    headless = request.config.getoption('--headless')
 
-    options = Options()
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.set_capability('browserName', 'chrome')
+    options = get_options(browser_name, headless)
+    options.set_capability('browserName', browser_name)
     options.set_capability('browserVersion', browser_version)
-    options.set_capability('goog:loggingPrefs', {'browser': 'ALL'})
     options.set_capability('selenoid:options', {
         'enableVNC': True,
         'enableVideo': True,
@@ -60,7 +73,8 @@ def setup_browser(request):
 
     try:
         attach_web.add_screenshot(browser)
-        attach_web.add_logs(browser)
+        if browser_name == 'chrome':
+            attach_web.add_logs(browser)
         attach_web.add_html(browser)
         attach_web.add_video(browser)
     finally:
