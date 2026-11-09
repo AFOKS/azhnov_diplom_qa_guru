@@ -8,8 +8,11 @@ class MainPage:
 
     def accept_cookies(self):
         button = browser.element(by.text('Принять'))
-        if button.with_(timeout=3).matching(be.visible):
+        try:
+            button.with_(timeout=3).should(be.visible)
             button.click()
+        except TimeoutException:
+            pass
         return self
 
     def filling_authorization_form(self, user):

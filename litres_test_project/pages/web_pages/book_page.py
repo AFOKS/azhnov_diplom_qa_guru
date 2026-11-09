@@ -160,10 +160,15 @@ class BookPage:
         return self
 
     def _close_gift_popup_if_shown(self):
-        close_button = browser.element(self.popup_close_icon)
-        if close_button.with_(timeout=6).matching(be.visible):
-            close_button.perform(command.js.click)
-            browser.element(self.popup).should(be.not_.present)
+        try:
+            close_button = browser.element(self.popup_close_icon).with_(
+                timeout=6
+            ).should(be.visible)
+        except TimeoutException:
+            return self
+
+        close_button.perform(command.js.click)
+        browser.element(self.popup).should(be.not_.present)
         return self
 
     def adding_book_to_cart(self):
