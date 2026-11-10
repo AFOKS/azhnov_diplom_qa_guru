@@ -129,8 +129,8 @@ allure serve allure-results
 
 #### Параметры UI-сборки
 
+- `BROWSER` — название браузера в Selenoid
 - `BROWSER_VERSION` — версия браузера в Selenoid
-- `COMMENT` — комментарий к запуску
 
 #### Как запустить
 
