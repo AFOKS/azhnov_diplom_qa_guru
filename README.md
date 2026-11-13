@@ -91,12 +91,25 @@ tests/
 Перед запуском создайте файл `.env` в корне проекта:
 
 ```
-SELENOID_URL=
+# Selenoid credentials:
+
 SELENOID_LOGIN=
 SELENOID_PASSWORD=
-USER_EMAIL=
-USER_PASSWORD=
-LITRES_NAME=
+SELENOID_URL=
+
+# Authorizations credentials
+
+USER_EMAIL=""
+USER_PASSWORD=""
+UNREGISTERED_USER_EMAIL=""
+UNREGISTERED_USER_PASSWORD=""
+
+# Browserstack sensitive info:
+
+USER_NAME=""
+ACCESS_KEY=""
+REMOTE_BROWSER_URL=""
+BSTACK_APP_ID=""
 ```
 
 ```bash
