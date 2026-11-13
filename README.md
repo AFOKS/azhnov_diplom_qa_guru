@@ -13,7 +13,6 @@
 - [Запуск в Jenkins](#запуск-в-jenkins)
 - [Allure-отчёт](#allure-отчёт)
 - [Allure TestOps](#allure-testops)
-- [Уведомления в Telegram](#уведомления-в-telegram)
 - [Видео прохождения тестов](#видео-прохождения-тестов)
 
 ## Покрытый функционал
@@ -198,12 +197,6 @@ allure serve allure-results
 
 #### Пример автотеста с вложениями
 ![TestOps: пример теста](design/image/example_autotests_allure_TestOps.png)
-
-## Уведомления в Telegram
-
-После каждой сборки Jenkins бот присылает в Telegram сводку: количество тестов, процент успешных и ссылку на отчёт.
-
-![Telegram: уведомление](design/image/tg_notification.png)
 
 ## Видео прохождения тестов
 
