@@ -61,7 +61,6 @@
 | Запуск браузеров | Selenoid (удалённо) |
 | CI | Jenkins |
 | Отчётность | Allure Report, Allure TestOps |
-| Уведомления | Telegram-бот |
 | Конфигурация | python-dotenv (`.env`) |
 
 ## Структура проекта
