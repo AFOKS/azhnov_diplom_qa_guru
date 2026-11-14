@@ -49,7 +49,6 @@
 <img src="design/icons/jenkins.png" width="50" title="Jenkins">
 <img src="design/icons/allure_report.png" width="50" title="Allure Report">
 <img src="design/icons/allure_testops.png" width="50" title="Allure TestOps">
-<img src="design/icons/tg.png" width="50" title="Telegram">
 </p>
 
 | Область | Инструмент |
